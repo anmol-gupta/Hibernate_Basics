@@ -16,12 +16,21 @@ public class BiDirectionalDemo {
 				.addAnnotatedClass(InstructorDetail.class).buildSessionFactory();
 		// create session
 		Session session = factory.getCurrentSession();
-		session.beginTransaction();
-		int theId = 2;
-		InstructorDetail tempInstructorDetail = session.get(InstructorDetail.class, theId);
-		System.out.println("Instructor Detail with the required id ->" + tempInstructorDetail);
-		System.out.println("Instructor with the required id ->" + tempInstructorDetail.getInstructor());
-		session.getTransaction().commit();
-	}
+		try {
+			session.beginTransaction();
+			int theId = 2;
+			InstructorDetail tempInstructorDetail = session.get(InstructorDetail.class, theId);
+			System.out.println("Instructor Detail with the required id ->" + tempInstructorDetail);
+			System.out.println("Instructor with the required id ->" + tempInstructorDetail.getInstructor());
+			session.getTransaction().commit();
+	
+		} catch (Exception exc) {
+			exc.printStackTrace();
+		}
+		finally {
+			session.close();
+			factory.close();
+		}
+			}
 
 }
