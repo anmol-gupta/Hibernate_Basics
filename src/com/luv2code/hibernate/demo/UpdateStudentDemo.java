@@ -6,30 +6,32 @@ import org.hibernate.cfg.Configuration;
 
 import com.luv2code.hibernate.demo.entity.Student;
 
-public class PrimaryKeyDemo {
+public class UpdateStudentDemo {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
+		//create session factory
 		SessionFactory factory = new Configuration().configure("hibernate.cfg.xml")
 				.addAnnotatedClass(Student.class).buildSessionFactory();
 		//create session 
 		Session session = factory.getCurrentSession();
-		try {
-			//create a student object
-			System.out.println("creating a new student object.....");
-			Student tempStudent1 = new Student("Ankit","Gupta","imankit@gmail.com", null);
-			Student tempStudent2 = new Student("Ayushi","Gupta","ayushi@gmail.com", null);
-			Student tempStudent3 = new Student("Juhi","Gupta","juhi@gmail.com", null);
+		try { 
 			//start a transaction 
 			session.beginTransaction();
-			//save the student object
-			System.out.println("Saving tempStudent to the database");
-			session.save(tempStudent1);
-			session.save(tempStudent3);
-			session.save(tempStudent2);
-			//commit transaction 
+			int studentId = 2;
+			System.out.println("Getting student with id: " + studentId);
+			Student myStudent = session.get(Student.class, studentId);
+			myStudent.setFirstName("Scooby");
+			//commit the transaction 
 			session.getTransaction().commit();
+			
+			//new code to update the domain of email for student with id 2
+			
+			session = factory.getCurrentSession();
+			session.beginTransaction();
+			session.createQuery("update Student set email = 'foo@gmail.com' where id=2").executeUpdate();
 			System.out.println("Done!!");
+			session.getTransaction().commit();
 		} finally {
 			factory.close();
 		}
